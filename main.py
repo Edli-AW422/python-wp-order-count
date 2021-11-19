@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 
 def main():
@@ -19,23 +20,23 @@ def main():
     output_file.writelines([])
     op = Options()
     op.headless = True
-    driver = webdriver.Chrome("./chromedriver.exe", options=op)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=op)
 
     for line in input_file:
-        print line
+        print(line)
         oneline = line.strip().split(';')
         username = oneline[0]
         password = oneline[1]
         url = oneline[2].split('|')[0].strip()
         resultOne = scrapOnePage(driver, url, username, password)
-        print resultOne
+        print(resultOne)
         result.append(resultOne)
     output_file.writelines(result)
     output_file.close()
     input_file.close()
 
 def scrapOnePage(driver, url, username, password):
-    print "scrapOnePage", url, username, password
+    print("scrapOnePage", url, username, password)
     try:
         driver.get(url)
         # login
@@ -60,10 +61,10 @@ def scrapOnePage(driver, url, username, password):
                 driver.close()
                 return username + ";" + password + ";" + url + " | No orders page\n"
             else:
-                print "no password input"
+                print("no password input")
                 return username + ";" + password + ";" + url + " | Invalid credential\n"
         else:
-            print "no login page"
+            print("no login page")
             return username + ";" + password + ";" + url + "| can not reach login page\n"
     except:
         return username + ";" + password + ";" + url + " | unexpected error\n"
