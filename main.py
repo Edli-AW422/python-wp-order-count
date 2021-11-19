@@ -19,7 +19,7 @@ def main():
     output_file.writelines([])
     op = Options()
     op.headless = True
-    driver = webdriver.Chrome("./chromedriver", options=op)
+    driver = webdriver.Chrome("./chromedriver.exe", options=op)
 
     for line in input_file:
         print line
