@@ -65,7 +65,7 @@ def scrapOnePage(driver, url, username, password):
         else:
             return username + ";" + password + ";" + url + "| can not reach login page\n"
     except:
-        return username + ";" + password + ";" + url + " | unexpected error\n"
+        return username + ";" + password + ";" + url + " | can not reach the site\n"
 
 
 # Press the green button in the gutter to run the script.
