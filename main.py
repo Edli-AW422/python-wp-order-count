@@ -12,14 +12,14 @@ import time
 def main():
     # read csv file
     result = []
-    input_path = ".\\input.txt"
-    output_path = ".\\output.txt"
+    input_path = "./input.txt"
+    output_path = "./output.txt"
     input_file = open(input_path, 'r')
     output_file = open(output_path, 'w')
     output_file.writelines([])
     op = Options()
     op.headless = True
-    driver = webdriver.Chrome(".\\chromedriver.exe", options=op)
+    driver = webdriver.Chrome("./chromedriver", options=op)
 
     for line in input_file:
         print line
