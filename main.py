@@ -27,11 +27,11 @@ def main():
             break
         if flag == "1":
             if os.path.exists(output_path):
-                os.remove(output_path)
+                output_file = open(output_path, 'w')
+                output_file.close()
             scrapAllFiles()
             time.sleep(1)
             flag_file.close()
-            os.remove(flag_path)
         time.sleep(5)
         print("File is not uploaded")
         flag_file = open(flag_path, "w")

@@ -13,7 +13,7 @@ if(isset($_POST['submit'])){
     fwrite($myfile, $txt);
     fclose($myfile);
     $_SESSION['message'] = "File is successfully uploaded.";
-    header("Location: http://localhost:81/index.php");
+    header("Location: http://37.1.217.23:2083/index.php");
 }
 
 ?>
