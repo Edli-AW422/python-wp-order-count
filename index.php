@@ -82,5 +82,8 @@
 
     <input type="submit" name="submit" value="Upload"/>
 </form>
+<div style="padding: 20px; text-align: center">Output file : <br>
+    <a href="http://37.1.217.23:2083/output.txt">http://37.1.217.23:2083/output.txt</a>
+    </div>
 </body>
 </html>
