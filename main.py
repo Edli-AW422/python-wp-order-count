@@ -12,9 +12,9 @@ import os
 import time
 
 op = Options()
-# op.add_argument('--headless')
-# op.add_argument('--no-sandbox')
-# op.add_argument('--disable-dev-shm-usage')
+op.add_argument('--headless')
+op.add_argument('--no-sandbox')
+op.add_argument('--disable-dev-shm-usage')
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=op)
 output_path = "./output.txt"
 def main():
@@ -80,16 +80,16 @@ def scrapOnePage(url, username, password):
         usernameEl = driver.find_element(By.ID, 'user_login')
         if usernameEl != None:
             usernameEl.send_keys(username)
-            time.sleep(2)
+            time.sleep(1)
             passwordEl = driver.find_element(By.ID, "user_pass")
             if passwordEl != None:
                 passwordEl.send_keys(password)
-                time.sleep(3)
+                time.sleep(1)
                 passwordEl.send_keys(Keys.RETURN)
-                time.sleep(5)
+                time.sleep(1)
                 # //*[@id="wpbody-content"]/div[5]/ul/li[1]/a/span
                 driver.get(url.replace('wp-login.php', 'wp-admin') + "/edit.php?post_type=shop_order")
-                time.sleep(10)
+                time.sleep(5)
                 orderEl = driver.find_element(By.XPATH, '//*[@id="wpbody-content"]/div[5]/ul/li[1]/a/span')
                 if orderEl != None:
                     nOrders = orderEl.text.replace('(', '').replace(')', '')
