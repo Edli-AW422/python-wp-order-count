@@ -1,6 +1,15 @@
 <?php
     session_start();
 ?>
+  <?php
+    if (isset($_REQUEST['action']) && $_REQUEST['action'] === "checkDone")
+    {
+      $res = array("result" =>"error","data"=>"");
+
+      echo json_encode($res);
+        die();
+    }
+  ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,6 +76,8 @@
 </head>
 
 <body>
+
+
 <?php
     if (isset($_SESSION['message']) && $_SESSION['message'] !== "")
     {
@@ -82,8 +93,35 @@
 
     <input type="submit" name="submit" value="Upload"/>
 </form>
-<div style="padding: 20px; text-align: center">Output file : <br>
-    <a href="http://37.1.217.23:2083/output.txt">http://37.1.217.23:2083/output.txt</a>
-    </div>
+<div style="padding: 20px; text-align: center" id="output">Output file : <br>
+    <a href="http://111.90.151.228/output.txt">http://111.90.151.228/output.txt</a>
+</div>
+<script src="./jquery.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $("#output").hide();
+      function check(){
+         $.ajax({
+            url: "?action=checkDone",
+            dataType: "json",
+            type: "GET",
+            contentType: "application/javascript; charset=utf-8",
+            success: function(msg, status, xhr) {
+              console.log(msg)
+              if(msg.result == "ok"){
+                $("#output").show();
+                return;
+              }
+              setTimeout(check , 3000);
+            },
+            error: function(xhr, status, error) {
+              setTimeout(check , 3000);
+              console.log("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+          });
+        }
+         check();
+  });// $(document).ready(function() 
+</script>
 </body>
 </html>
