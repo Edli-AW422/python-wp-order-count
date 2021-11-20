@@ -37,7 +37,7 @@ def main():
         flag_file = open(flag_path, "w")
         flag_file.writelines(['0'])
         flag_file.close()
-        break
+
 
 def scrapAllFiles():
     input_dir = "./upload"
