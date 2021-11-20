@@ -15,7 +15,7 @@ op = Options()
 op.add_argument('--headless')
 op.add_argument('--no-sandbox')
 op.add_argument('--disable-dev-shm-usage')
-driver = webdriver.Chrome('./chromedriver', options=op)
+driver = webdriver.Chrome(ChromeDriverManager().install(), options=op)
 output_path = "./output.txt"
 def main():
     flag_path = "./flag"
