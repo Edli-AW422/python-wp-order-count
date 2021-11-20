@@ -8,35 +8,70 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+import os
 import time
 
+op = Options()
+op.add_argument('--headless')
+op.add_argument('--no-sandbox')
+op.add_argument('--disable-dev-shm-usage')
+driver = webdriver.Chrome(ChromeDriverManager().install(), options=op)
+output_path = "./output.txt"
 def main():
-    # read csv file
-    result = []
-    input_path = "./input.txt"
-    output_path = "./output.txt"
-    input_file = open(input_path, 'r')
-    output_file = open(output_path, 'w')
-    output_file.writelines([])
-    op = Options()
-    op.add_argument('--headless')
-    op.add_argument('--no-sandbox')
-    op.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=op)
+    flag_path = "./flag"
+    while True:
+        flag_file = open(flag_path, "r+")
+        flag = 0
+        for line in flag_file:
+            flag = line.strip()
+            break
+        if flag == "1":
+            if os.path.exists(output_path):
+                os.remove(output_path)
+            scrapAllFiles()
+            time.sleep(1)
+            flag_file.close()
+            os.remove(flag_path)
+        time.sleep(5)
+        print("File is not uploaded")
+        flag_file = open(flag_path, "w")
+        flag_file.writelines(['0'])
+        flag_file.close()
+        break
 
-    for line in input_file:
-        oneline = line.strip().split(';')
-        username = oneline[0]
-        password = oneline[1]
-        url = oneline[2].split('|')[0].strip()
-        resultOne = scrapOnePage(driver, url, username, password)
-        print(resultOne)
-        result.append(resultOne)
-    output_file.writelines(result)
-    output_file.close()
-    input_file.close()
+def scrapAllFiles():
+    input_dir = "./upload"
+    os.chdir(input_dir)
+    files = os.listdir()
+    os.chdir('..')
+    for file in files:
+        if file.endswith('.txt'):
+            file_path = f"{input_dir}/{file}"
+            scrapOneFile(file_path)
 
-def scrapOnePage(driver, url, username, password):
+def scrapOneFile(input_path):
+    print("scraping in ", input_path)
+    try:
+        # read csv file
+        result = []
+        input_file = open(input_path, 'r')
+        output_file = open(output_path, 'a')
+
+        for line in input_file:
+            oneline = line.strip().split(';')
+            username = oneline[0]
+            password = oneline[1]
+            url = oneline[2].split('|')[0].strip()
+            resultOne = scrapOnePage(url, username, password)
+            print(resultOne)
+            result.append(resultOne)
+        output_file.writelines(result)
+        output_file.close()
+        input_file.close()
+    except:
+        print("Unknown format file")
+
+def scrapOnePage(url, username, password):
     try:
         driver.get(url)
         # login
